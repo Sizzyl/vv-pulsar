@@ -11,8 +11,21 @@
    7f2	= Wiimmfi (2P)
    818	= You will now disconnect\nfrom Wiimmfi and\nreturn to the main menu.
    841	= \z{602,0} and \z{802,120000}\nwill connect to Wiimmfi\ntogether. Is this OK?
-    8e	= Hybrid Drift
-    8f	= Manual Drift
+   cea	= Hybrid
+   ceb	= Manual
+   ced	= ■ Drift ■\n
+    + Drift lets you take corners without\n
+    + losing speed. There are two drift modes.\n
+    + \n
+    + ■ Hybrid Drift ■\n
+    + You will drift automatically when turning,\n
+    + you can manual drift to get a shorter Mini-Turbo.\n
+    + \n
+    + ■ Manual Drift ■\n
+    + \z{802,170000}Hop while turning to drift. Keep\n
+    + drifting to get a Mini-Turbo, which\n
+    + gives you a burst of speed.
+   cee	= View an explanation of drift and drift modes.
    bbf  = {CC}cc\n\z{800,32}Bikes Only
    bc3  = {CC}cc\n\z{800,32}Karts and Bikes
    d54  = {CC}cc
@@ -144,14 +157,15 @@
   3000	= Fast Menus
   3001	= CT Layout
   3002	= Music
+  3003  = Input Viewer
   3010	= Disabled
   3011	= Enabled
   3020	= Default
   3021	= Alphabetical
+
   3030	= Default
   3031	= Disable All
   3032  = Disable Race
-  3033  = Input Viewer
   3100	= Menus will animate at the default speed.
   3101	= Removes the animation on button press.
   3200	= Use the default pack layout.
@@ -159,12 +173,12 @@
   3300	= Default music behaviour.
   3301	= Disables all music.
   3302	= Disables only race BRSTMs.
-  3330  = Disabled
-  3331  = Enabled
-  3332  = Forced
-  3400  = The input viewer will be disabled.
+  3330  = Forced
+  3331  = Nunchuk
+  3332  = Disabled
+  3400  = The input viewer will be shown for all controller types.
   3401  = The input viewer will be shown when playing with a nunchuk controller.
-  3402  = The input viewer will be shown for all controller types.
+  3402  = The input viewer will be disabled.
   3700	= Boot To Wiimmfi
   3710	= Disabled
   3711	= License 1
