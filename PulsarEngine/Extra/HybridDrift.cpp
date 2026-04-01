@@ -4,6 +4,8 @@ Original code by Ismy and CLF78, with fixes by Ro
 Adapter to c++ by Retro Rewind Team
 Adapted for vv-pulsar - always enabled, replaces automatic drift
 */
+#include <kamek.hpp>
+
 namespace HybridDrift {
 
 // original code by Ismy and CLF78, with fixes by Ro.
