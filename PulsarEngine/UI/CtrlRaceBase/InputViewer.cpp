@@ -85,13 +85,12 @@ void CtrlRaceInputViewer::OnUpdate() {
     this->UpdatePausePosition();
 
     const Kart::Pointers& pointers = Kart::Manager::sInstance->players[this->GetPlayerId()]->pointers;
-    const Input::Manager* inputMgr = &SectionMgr::sInstance->pad;
     const u8 hudSlotId = this->GetPlayerId();
 
     if(pointers.values != nullptr && hudSlotId < 4) {
-        const Input::RealControllerHolder* controller = inputMgr->GetRealControllerHolder(hudSlotId);
+        const Input::RealControllerHolder* controller = SectionMgr::sInstance->pad.padInfos[hudSlotId].controllerHolder;
         if(controller != nullptr) {
-            const ControllerMultiInputState* input = &controller->inputStates[0];
+            const Input::State* input = &controller->inputStates[0];
 
             // Process stick input
             Vec2 stick;
