@@ -16,7 +16,7 @@ set "GAMESOURCE=.\GameSource"
 SET "PULSAR=.\PulsarEngine"
 
 :: Change this as necessary depending on where you put CodeWarrior
-SET "CC=C:\Program Files (x86)\Freescale\CW for MPC55xx and MPC56xx 2.10\PowerPC_EABI_Tools\Command_Line_Tools\mwcceppc.exe"
+SET "CC="
 
 :: Riivolution Destination (change as necessary)
 SET "RIIVO="
@@ -36,12 +36,12 @@ SET CPPFILES=
 for /R %PULSAR% %%f in (*.cpp) do SET "CPPFILES=%%f !CPPFILES!"
 
 :: Compile CPP
-%CC% %CFLAGS% -c -o "build/kamek.o" "%ENGINE%\kamek.cpp"
+"%CC%" %CFLAGS% -c -o "build/kamek.o" "%ENGINE%\kamek.cpp"
 
 SET OBJECTS=
 FOR %%H IN (%CPPFILES%) DO (
     ::echo "Compiling %%H..."
-    %CC% %CFLAGS% %DEFINE% -c -o "build/%%~nH.o" "%%H"
+    "%CC%" %CFLAGS% %DEFINE% -c -o "build/%%~nH.o" "%%H"
     SET "OBJECTS=build/%%~nH.o !OBJECTS!"
 )
 
