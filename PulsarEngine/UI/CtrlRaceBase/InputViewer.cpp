@@ -19,7 +19,7 @@ namespace UI {
 const s8 CtrlRaceInputViewer::DPAD_HOLD_FOR_N_FRAMES = 10;
 void CtrlRaceInputViewer::Init() {
     char name[32];
-    bool isBrakedriftToggled = false;
+    bool isBrakedriftToggled = true;  // Always show brake input with hybrid drift
     RacedataScenario& raceScenario = Racedata::sInstance->racesScenario;
     
     for (int i = 0; i < (int)DpadState_Count; ++i) {
@@ -39,7 +39,7 @@ void CtrlRaceInputViewer::Init() {
     const ControllerType controllerType = SectionMgr::sInstance->pad.padInfos[0].controllerHolder->curController->GetType();
     const int inputSetting = Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_MENU, SETTINGMENU_RADIO_INPUT);
     const bool isGhostRace = (sectionId >= SECTION_WATCH_GHOST_FROM_CHANNEL && sectionId <= SECTION_WATCH_GHOST_FROM_MENU);
-    bool isNunchuck = (controllerType == NUNCHUCK) && !(inputSetting == MENUSETTING_INPUT_FORCED || isGhostRace);
+    bool isNunchuck = (controllerType == NUNCHUCK);
 
     for (int i = 0; i < (int)AccelState_Count; ++i) {
         AccelState state = static_cast<AccelState>(i);
@@ -129,19 +129,16 @@ void CtrlRaceInputViewer::OnUpdate() {
 u32 CtrlRaceInputViewer::Count() {
     if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_MENU, SETTINGMENU_RADIO_INPUT) == MENUSETTING_INPUT_DISABLED)
         return 0;
-    else if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_MENU, SETTINGMENU_RADIO_INPUT) == MENUSETTING_INPUT_ENABLED || 
-    Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_MENU, SETTINGMENU_RADIO_INPUT) == MENUSETTING_INPUT_FORCED) {
-        // Declare and initialize scenario here
-        const RacedataScenario& scenario = Racedata::sInstance->racesScenario;
-        u32 localPlayerCount = scenario.localPlayerCount;
-        const SectionId sectionId = SectionMgr::sInstance->curSection->sectionId;
-        if(sectionId >= SECTION_WATCH_GHOST_FROM_CHANNEL && sectionId <= SECTION_WATCH_GHOST_FROM_MENU) 
-            localPlayerCount += 1;
-        if(localPlayerCount == 0 && (scenario.settings.gametype & GAMETYPE_ONLINE_SPECTATOR)) 
-            localPlayerCount = 1;
-        return localPlayerCount;
-    }
-    return 0; 
+    
+    // Show input viewer for all non-disabled settings
+    const RacedataScenario& scenario = Racedata::sInstance->racesScenario;
+    u32 localPlayerCount = scenario.localPlayerCount;
+    const SectionId sectionId = SectionMgr::sInstance->curSection->sectionId;
+    if(sectionId >= SECTION_WATCH_GHOST_FROM_CHANNEL && sectionId <= SECTION_WATCH_GHOST_FROM_MENU) 
+        localPlayerCount += 1;
+    if(localPlayerCount == 0 && (scenario.settings.gametype & GAMETYPE_ONLINE_SPECTATOR)) 
+        localPlayerCount = 1;
+    return localPlayerCount;
 }
 void CtrlRaceInputViewer::Create(Page& page, u32 index, u32 count) {
     u8 variantId = (count == 3) ? 4 : count;
@@ -165,21 +162,18 @@ void CtrlRaceInputViewer::Load(const char* variant, u8 id) {
     const int inputSetting = Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_MENU, SETTINGMENU_RADIO_INPUT);
     const bool isGhostRace = (sectionId >= SECTION_WATCH_GHOST_FROM_CHANNEL && sectionId <= SECTION_WATCH_GHOST_FROM_MENU);
 
-    if (inputSetting == MENUSETTING_INPUT_FORCED || isGhostRace) {
-        loader.Load(UI::raceFolder, "PULInputViewer", variant, groups);
+    // Always show input viewer when enabled (not disabled), with auto-detect for nunchuk layout
+    if (inputSetting != MENUSETTING_INPUT_DISABLED || isGhostRace) {
+        // Auto-detect nunchuk controller and use optimized layout
+        if (controllerType == NUNCHUCK) {
+            loader.Load(UI::raceFolder, "PULInputViewerChuk", variant, groups);
+        } else {
+            loader.Load(UI::raceFolder, "PULInputViewer", variant, groups);
+        }
         return;
     }
 
-    if (controllerType == NUNCHUCK && inputSetting == MENUSETTING_INPUT_ENABLED && !isGhostRace) {
-        loader.Load(UI::raceFolder, "PULInputViewerChuk", variant, groups);
-        return;
-    }
-
-    if (controllerType == WHEEL || controllerType == CLASSIC || controllerType == GCN) {
-        loader.Load(UI::raceFolder, "PULInputViewer", variant, groups);
-        return;
-    }
-
+    // Fallback (should not reach here if disabled)
     loader.Load(UI::raceFolder, "PULInputViewer", variant, groups);
 }
 void CtrlRaceInputViewer::setDpad(DpadState state) {
