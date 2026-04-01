@@ -10,7 +10,9 @@ To compile code you need to install CodeWarrior:
     and the DLL and EXE files inside `PowerPC_EABI_Tools/Command_Line_Tools`.
   - Useful documentation is in `Help/Power_Arch_Build_Tools_Reference.chm`
     (or `Help/PDF/Power Architecture Build Tools Reference.pdf`)
-
+    
+# MKW-SP
+Ported [**mkw-sp**](https://github.com/mkw-sp/mkw-sp) Input Display into this launcher with help from [**Retro Rewind Team**](https://github.com/Retro-Rewind-Team/rr-pulsar).
 
 # Pulsar
 
