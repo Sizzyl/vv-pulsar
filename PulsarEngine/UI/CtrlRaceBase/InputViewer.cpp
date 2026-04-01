@@ -93,9 +93,7 @@ void CtrlRaceInputViewer::OnUpdate() {
             const Input::State* input = &controller->inputStates[0];
 
             // Process stick input
-            Vec2 stick;
-            stick.x = input->stickX / 7.0f;
-            stick.z = input->stickY / 7.0f;
+            Vec2 stick = input->stick;
 
             // Process button inputs
             bool accel = input->buttonActions & 0x1;
@@ -104,10 +102,10 @@ void CtrlRaceInputViewer::OnUpdate() {
 
             // Process D-pad
             DpadState dpadState = DpadState_Off;
-            if(input->buttonActions & 0x200) dpadState = DpadState_Up;
-            else if(input->buttonActions & 0x100) dpadState = DpadState_Down;
-            else if(input->buttonActions & 0x400) dpadState = DpadState_Left;
-            else if(input->buttonActions & 0x800) dpadState = DpadState_Right;
+            if(input->motionControlFlick == 1) dpadState = DpadState_Up;
+            else if(input->motionControlFlick == 2) dpadState = DpadState_Down;
+            else if(input->motionControlFlick == 3) dpadState = DpadState_Left;
+            else if(input->motionControlFlick == 4) dpadState = DpadState_Right;
 
             setDpad(dpadState);
             setAccel(accel ? AccelState_Pressed : AccelState_Off);
@@ -121,7 +119,7 @@ void CtrlRaceInputViewer::OnUpdate() {
             bool isBrakedriftToggled = (scenario.settings.engineClass == CC_100);
 
             if(isBrakedriftToggled) {
-                bool BD = input->buttonActions & 0x10;
+                bool BD = input->buttonActions & 0x2;
                 setTrigger(Trigger_BD, BD ? TriggerState_Pressed : TriggerState_Off);
             }
         }
