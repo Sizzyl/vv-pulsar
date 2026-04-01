@@ -172,6 +172,7 @@
   4002	= Battle Glitch
   4003	= Draggable Blues
   4004	= Speedometer Location
+  4005  = Input Viewer
   4010	= Disabled
   4011	= Enabled
   4020	= Disabled
@@ -183,6 +184,9 @@
   4050  = Left
   4051  = Right
   4052  = Disabled
+  4060  = Disabled
+  4061  = Regular
+  4062  = Nunchuk
   4100	= Character icons will show on the minimap.
   4101	= Mii Heads will show on the minimap.
   4200	= Track music will normally transition to the fast lap file.
@@ -194,6 +198,9 @@
   4500	= The speedometer will be on the left.
   4501	= The speedometer will be on the right.
   4502	= The speedometer will be disabled.
+  4600  = The input viewer will be disabled.
+  4601  = The input viewer will show regular controller layout.
+  4602  = The input viewer will show nunchuk controller layout.
   4700  = Speedometer Fractional
   4710  = None
   4711  = 1 digit
