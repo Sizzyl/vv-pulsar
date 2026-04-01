@@ -39,7 +39,6 @@ void CtrlRaceInputViewer::Init() {
     const ControllerType controllerType = SectionMgr::sInstance->pad.padInfos[0].controllerHolder->curController->GetType();
     const int inputSetting = Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_MENU, SETTINGMENU_RADIO_INPUT);
     const bool isGhostRace = (sectionId >= SECTION_WATCH_GHOST_FROM_CHANNEL && sectionId <= SECTION_WATCH_GHOST_FROM_MENU);
-    bool isNunchuck = (controllerType == NUNCHUCK);
 
     for (int i = 0; i < (int)AccelState_Count; ++i) {
         AccelState state = static_cast<AccelState>(i);
@@ -49,7 +48,7 @@ void CtrlRaceInputViewer::Init() {
         nw4r::lyt::Pane* pane = this->layout.GetPaneByName(name);
         this->SetPaneVisibility(name, state == AccelState_Off);
 
-        if (isNunchuk) {
+        if (controllerType == NUNCHUCK) {
             pane->trans.y -= pane->scale.z * 10.0f;
             chuk_b->trans.y -= chuk_b->scale.z * 6.0f;
             chuk_boff->trans.y -= chuk_boff->scale.z * 6.0f;
