@@ -1,3 +1,17 @@
+# Mario Kart Wii Velocity Vault
+Mario Kart Wii Velocity Vault (MKWVV) is a pack collecting the best of the best custom tracks into one distribution. This repository contains the modified version of the Pulsar engine used to build the mod and any other tracks/assets used. Any code that was modified was fully written by AI as I don't really know how to code.
+
+To compile code you need to install CodeWarrior:
+
+- NXP ['CodeWarrior Special Edition'][cw] for MPC55xx/MPC56xx v2.10
+  - If this direct link doesn't work, the original page is
+    ['available on the Internet Archive'][cwIA].
+  - After installing it, you need `license.dat` from the installation root,
+    and the DLL and EXE files inside `PowerPC_EABI_Tools/Command_Line_Tools`.
+  - Useful documentation is in `Help/Power_Arch_Build_Tools_Reference.chm`
+    (or `Help/PDF/Power Architecture Build Tools Reference.pdf`)
+
+
 # Pulsar
 
 Pulsar is a Mario Kart Wii Kamek-Based engine to create CT distributions. It comes with its own [software](../main/PulsarPackCreator/Executable) to aid in building custom distributions, and multiple quality of life features:
@@ -50,3 +64,7 @@ Network:
 
 Credits:
 - Treeki for [Kamek](https://github.com/Treeki/Kamek/tree/master). The engine has been ever so slightly modified to create a new output format which combines the usual 4 binaries. 
+
+
+[cw]: http://cache.nxp.com/lgfiles/devsuites/PowerPC/CW55xx_v2_10_SE.exe?WT_TYPE=IDE%20-%20Debug,%20Compile%20and%20Build%20Tools&WT_VENDOR=FREESCALE&WT_FILE_FORMAT=exe&WT_ASSET=Downloads&fileExt=.exe
+[cwIA]: http://web.archive.org/web/20160602205749/http://www.nxp.com/products/software-and-tools/software-development-tools/codewarrior-development-tools/downloads/special-edition-software:CW_SPECIALEDITIONS
