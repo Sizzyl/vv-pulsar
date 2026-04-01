@@ -50,7 +50,7 @@ void CtrlRaceInputViewer::Init() {
         nw4r::lyt::Pane* chuk_boff = this->layout.GetPaneByName("TriggerROff");
         this->SetPaneVisibility(name, state == AccelState_Off);
 
-        if (controllerType == NUNCHUCK)) {
+        if (controllerType == NUNCHUCK) {
                 pane->trans.y -= pane->scale.z * 10.0f;
                 chuk_b->trans.y -= chuk_b->scale.z * 6.0f;
                 chuk_boff->trans.y -= chuk_boff->scale.z * 6.0f;
