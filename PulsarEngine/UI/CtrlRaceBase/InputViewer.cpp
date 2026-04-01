@@ -19,7 +19,7 @@ namespace UI {
 const s8 CtrlRaceInputViewer::DPAD_HOLD_FOR_N_FRAMES = 10;
 void CtrlRaceInputViewer::Init() {
     char name[32];
-    bool isBrakedriftToggled = true;  // Always show brake input with hybrid drift
+    bool isBrakedriftToggled = false;  // Always show brake input with hybrid drift
     RacedataScenario& raceScenario = Racedata::sInstance->racesScenario;
     
     for (int i = 0; i < (int)DpadState_Count; ++i) {
