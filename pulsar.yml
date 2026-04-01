@@ -1,0 +1,21 @@
+name: Pulsar
+game_slug: mkw-pulsar
+version: DL
+slug: mkw-pulsar
+runner: wine
+notes: |
+    Feedback, Issues and Pull Requests regarding the installer script are gladly welcome at: https://codeberg.org/lutris-forge/lutris-mkw-pulsar
+script:
+  files:
+  - pulsar: https://pulsar.brawlbox.co.uk/Pulsar%20Pack%20Creator.exe
+  game:
+    exe: $GAMEDIR/Pulsar.exe
+    working_dir: $GAMEDIR
+  installer:
+    - execute:
+        command: cp "$pulsar" "$GAMEDIR/Pulsar.exe"
+    - task:
+        name: winetricks
+        description: Installing Pulsar requirements...
+        app: dotnetdesktop7
+        silent: true
