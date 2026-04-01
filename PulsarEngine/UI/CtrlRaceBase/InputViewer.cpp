@@ -1,153 +1,148 @@
-/**
- * Input Viewer - Displays player inputs during races
- * 
- * Based on implementations from:
- * - mkw-sp (Copyright 2021-2023 Pablo Stebler, MIT License)
- * - Retro Rewind Team
- * - Insane Kart Wii
- */
+/*
+Copyright 2021-2023 Pablo Stebler
 
-#include <MarioKartWii/Kart/KartManager.hpp>
-#include <MarioKartWii/Race/RaceInfo/RaceInfo.hpp>
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 #include <UI/CtrlRaceBase/InputViewer.hpp>
+#include <MarioKartWii/Race/RaceInfo/RaceInfo.hpp>
 #include <Settings/Settings.hpp>
 
 namespace Pulsar {
 namespace UI {
 
+//Input Display by MKW-SP Team ported by Rambo
+//Taken from https://github.com/mkw-sp/mkw-sp/blob/main/payload/game/ui/ctrl/CtrlRaceInputDisplay.cc
 const s8 CtrlRaceInputViewer::DPAD_HOLD_FOR_N_FRAMES = 10;
-
 void CtrlRaceInputViewer::Init() {
     char name[32];
-    const RacedataScenario& scenario = Racedata::sInstance->racesScenario;
-    const GameMode mode = scenario.settings.gamemode;
+    bool isBrakedriftToggled = true;
+    RacedataScenario& raceScenario = Racedata::sInstance->racesScenario;
     
-    // Check if brake drift is enabled
-    bool isBrakedriftToggled = (scenario.settings.engineClass == CC_100);
-
-    // Initialize D-pad panes
-    for(int i = 0; i < (int)DpadState_Count; ++i) {
+    for (int i = 0; i < (int)DpadState_Count; ++i) {
         DpadState state = static_cast<DpadState>(i);
         const char* stateName = CtrlRaceInputViewer::DpadStateToName(state);
+        
         snprintf(name, 32, "Dpad%.*s", strlen(stateName), stateName);
         nw4r::lyt::Pane* pane = this->layout.GetPaneByName(name);
         this->SetPaneVisibility(name, state == DpadState_Off);
         this->m_dpadPanes[i] = pane;
+        
         this->HudSlotColorEnable(name, true);
     }
+    
+    // Check if this is a nunchuck controller to handle positioning differently
+    const SectionId sectionId = SectionMgr::sInstance->curSection->sectionId;
+    const ControllerType controllerType = SectionMgr::sInstance->pad.padInfos[0].controllerHolder->curController->GetType();
+    const int inputSetting = Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_MENU, SETTINGMENU_RADIO_INPUT);
+    const bool isGhostRace = (sectionId >= SECTION_WATCH_GHOST_FROM_CHANNEL && sectionId <= SECTION_WATCH_GHOST_FROM_MENU);
+    bool isNunchuck = (controllerType == NUNCHUCK) && !(inputSetting == MENUSETTING_INPUT_FORCED || isGhostRace);
 
-    // Initialize accel panes
-    for(int i = 0; i < (int)AccelState_Count; ++i) {
+    for (int i = 0; i < (int)AccelState_Count; ++i) {
         AccelState state = static_cast<AccelState>(i);
         const char* stateName = CtrlRaceInputViewer::AccelStateToName(state);
+
         snprintf(name, 32, "Accel%.*s", strlen(stateName), stateName);
         nw4r::lyt::Pane* pane = this->layout.GetPaneByName(name);
         this->SetPaneVisibility(name, state == AccelState_Off);
+
+        if (isBrakedriftToggled && !isNunchuck) {
+            pane->trans.x += pane->scale.x * 15.0f;
+            pane->trans.y += pane->scale.z * 15.0f;
+        }
         this->m_accelPanes[i] = pane;
+
         this->HudSlotColorEnable(name, true);
     }
-
-    // Initialize trigger panes
-    for(int i = 0; i < (int)Trigger_Count; ++i) {
+    
+    for (int i = 0; i < (int)Trigger_Count; ++i) {
         Trigger trigger = static_cast<Trigger>(i);
         const char* triggerName = CtrlRaceInputViewer::TriggerToName(trigger);
-        for(int j = 0; j < (int)TriggerState_Count; ++j) {
+        
+        for (int j = 0; j < (int)TriggerState_Count; ++j) {
             TriggerState state = static_cast<TriggerState>(j);
             const char* stateName = CtrlRaceInputViewer::TriggerStateToName(state);
+            
             snprintf(name, 32, "Trigger%.*s%.*s", strlen(triggerName), triggerName, strlen(stateName), stateName);
             nw4r::lyt::Pane* pane = this->layout.GetPaneByName(name);
             this->SetPaneVisibility(name, state == TriggerState_Off);
-            if(!isBrakedriftToggled && trigger == Trigger_BD) {
+            if (!isBrakedriftToggled && trigger == Trigger_BD) {
                 this->SetPaneVisibility(name, false);
             }
             this->m_triggerPanes[i][j] = pane;
+
             this->HudSlotColorEnable(name, true);
         }
     }
-
-    // Initialize stick pane
+    
     this->m_stickPane = this->layout.GetPaneByName("Stick");
     this->m_stickOrigin = this->m_stickPane->trans;
     this->m_playerId = this->GetPlayerId();
+
     this->HudSlotColorEnable("Stick", true);
     this->HudSlotColorEnable("StickBackdrop", true);
-
-    // Check if nunchuk layout
-    u32 inputViewerSetting = Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_RACE, SETTINGRACE_RADIO_INPUTVIEWER);
-    if(inputViewerSetting == RACESETTING_INPUTVIEWER_NUNCHUK) {
-        this->HudSlotColorEnable("ChukBg", true);
-    }
 
     LayoutUIControl::Init();
 }
 
 void CtrlRaceInputViewer::OnUpdate() {
     this->UpdatePausePosition();
-
-    const Kart::Pointers& pointers = Kart::Manager::sInstance->players[this->GetPlayerId()]->pointers;
-    const u8 hudSlotId = this->GetPlayerId();
-
-    if(pointers.values != nullptr && hudSlotId < 4) {
-        const Input::RealControllerHolder* controller = SectionMgr::sInstance->pad.padInfos[hudSlotId].controllerHolder;
-        if(controller != nullptr) {
-            const Input::State* input = &controller->inputStates[0];
-
-            // Process stick input
+    u8 playerId = this->GetPlayerId();
+    if (playerId != m_playerId) {
+        m_dpadTimer = 0;
+        m_playerId = playerId;
+    }
+    RacedataScenario& raceScenario = Racedata::sInstance->racesScenario;
+    if (playerId < raceScenario.playerCount) {
+        RaceinfoPlayer* player = Raceinfo::sInstance->players[playerId];
+        if (player) {
+            Input::State* input = &player->realControllerHolder->inputStates[0];
+            DpadState dpadState = (DpadState)input->motionControlFlick;
             Vec2 stick = input->stick;
-
-            // Process button inputs
+            // Check mirror mode
+            if (raceScenario.settings.modeFlags & 1) {
+                stick.x = -stick.x;
+                if (input->motionControlFlick == DpadState_Left) {
+                    dpadState = DpadState_Right;
+                } else if (input->motionControlFlick == DpadState_Right) {
+                    dpadState = DpadState_Left;
+                }
+            }
+            
             bool accel = input->buttonActions & 0x1;
-            bool L = input->buttonActions & 0x8;
-            bool R = input->buttonActions & 0x4;
-
-            // Process D-pad
-            DpadState dpadState = DpadState_Off;
-            if(input->motionControlFlick == 1) dpadState = DpadState_Up;
-            else if(input->motionControlFlick == 2) dpadState = DpadState_Down;
-            else if(input->motionControlFlick == 3) dpadState = DpadState_Left;
-            else if(input->motionControlFlick == 4) dpadState = DpadState_Right;
+            bool L = input->buttonActions & 0x4;
+            bool R = input->buttonActions & 0x2;
+            bool BD = input->buttonActions & 0x10;
 
             setDpad(dpadState);
             setAccel(accel ? AccelState_Pressed : AccelState_Off);
             setTrigger(Trigger_L, L ? TriggerState_Pressed : TriggerState_Off);
             setTrigger(Trigger_R, R ? TriggerState_Pressed : TriggerState_Off);
             setStick(stick);
-
-            // Check for brake drift
-            const RacedataScenario& scenario = Racedata::sInstance->racesScenario;
-            const GameMode mode = scenario.settings.gamemode;
-            bool isBrakedriftToggled = (scenario.settings.engineClass == CC_100);
-
-            if(isBrakedriftToggled) {
-                bool BD = input->buttonActions & 0x2;
-                setTrigger(Trigger_BD, BD ? TriggerState_Pressed : TriggerState_Off);
-            }
+            setTrigger(Trigger_BD, BD ? TriggerState_Pressed : TriggerState_Off);
         }
     }
 }
-
 u32 CtrlRaceInputViewer::Count() {
-    u32 inputViewerSetting = Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_RACE, SETTINGRACE_RADIO_INPUTVIEWER);
-    if(inputViewerSetting != RACESETTING_INPUTVIEWER_DISABLED) {
+    if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_MENU, SETTINGMENU_RADIO_INPUT) == MENUSETTING_INPUT_DISABLED)
+        return 0;
+    else if(Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_MENU, SETTINGMENU_RADIO_INPUT) == MENUSETTING_INPUT_ENABLED || 
+    Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_MENU, SETTINGMENU_RADIO_INPUT) == MENUSETTING_INPUT_FORCED) {
+        // Declare and initialize scenario here
         const RacedataScenario& scenario = Racedata::sInstance->racesScenario;
         u32 localPlayerCount = scenario.localPlayerCount;
         const SectionId sectionId = SectionMgr::sInstance->curSection->sectionId;
-        
-        // Add ghost viewer if watching ghost
-        if(sectionId >= SECTION_WATCH_GHOST_FROM_CHANNEL && sectionId <= SECTION_WATCH_GHOST_FROM_MENU) {
+        if(sectionId >= SECTION_WATCH_GHOST_FROM_CHANNEL && sectionId <= SECTION_WATCH_GHOST_FROM_MENU) 
             localPlayerCount += 1;
-        }
-        
-        // Handle spectator mode
-        if(localPlayerCount == 0 && (scenario.settings.gametype & GAMETYPE_ONLINE_SPECTATOR)) {
+        if(localPlayerCount == 0 && (scenario.settings.gametype & GAMETYPE_ONLINE_SPECTATOR)) 
             localPlayerCount = 1;
-        }
-        
         return localPlayerCount;
     }
-    return 0;
+    return 0; 
 }
-
 void CtrlRaceInputViewer::Create(Page& page, u32 index, u32 count) {
     u8 variantId = (count == 3) ? 4 : count;
     for(int i = 0; i < count; ++i) {
@@ -159,64 +154,75 @@ void CtrlRaceInputViewer::Create(Page& page, u32 index, u32 count) {
         inputViewer->Load(variant, i);
     }
 }
-
 static CustomCtrlBuilder INPUTVIEWER(CtrlRaceInputViewer::Count, CtrlRaceInputViewer::Create);
-
 void CtrlRaceInputViewer::Load(const char* variant, u8 id) {
     this->hudSlotId = id;
     ControlLoader loader(this);
-    const char* groups[] = {nullptr, nullptr};
-    
-    u32 inputViewerSetting = Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_RACE, SETTINGRACE_RADIO_INPUTVIEWER);
-    if(inputViewerSetting == RACESETTING_INPUTVIEWER_NUNCHUK) {
+    const char* groups[] = { nullptr, nullptr };
+
+    const SectionId sectionId = SectionMgr::sInstance->curSection->sectionId;
+    const ControllerType controllerType = SectionMgr::sInstance->pad.padInfos[0].controllerHolder->curController->GetType();
+    const int inputSetting = Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_MENU, SETTINGMENU_RADIO_INPUT);
+    const bool isGhostRace = (sectionId >= SECTION_WATCH_GHOST_FROM_CHANNEL && sectionId <= SECTION_WATCH_GHOST_FROM_MENU);
+
+    if (inputSetting == MENUSETTING_INPUT_FORCED || isGhostRace) {
+        loader.Load(UI::raceFolder, "PULInputViewer", variant, groups);
+        return;
+    }
+
+    if (controllerType == NUNCHUCK && inputSetting == MENUSETTING_INPUT_ENABLED && !isGhostRace) {
         loader.Load(UI::raceFolder, "PULInputViewerChuk", variant, groups);
-    } else {
+        return;
+    }
+
+    if (controllerType == WHEEL || controllerType == CLASSIC || controllerType == GCN) {
         loader.Load(UI::raceFolder, "PULInputViewer", variant, groups);
     }
-}
 
+        loader.Load(UI::raceFolder, "PULInputViewer", variant, groups);
+}
 void CtrlRaceInputViewer::setDpad(DpadState state) {
-    if(state == m_dpadState) {
+    if (state == m_dpadState) {
         return;
     }
-    
     // Only hold for off press
-    if(state == DpadState_Off && m_dpadTimer != 0 && --m_dpadTimer) {
+    if (state == DpadState_Off && m_dpadTimer != 0 && --m_dpadTimer) {
         return;
     }
-    
     m_dpadPanes[static_cast<u32>(m_dpadState)]->flag &= ~1;
     m_dpadPanes[static_cast<u32>(state)]->flag |= 1;
     m_dpadState = state;
     m_dpadTimer = DPAD_HOLD_FOR_N_FRAMES;
 }
-
 void CtrlRaceInputViewer::setAccel(AccelState state) {
-    if(state == m_accelState) {
+    if (state == m_accelState) {
         return;
     }
-    
     m_accelPanes[static_cast<u32>(m_accelState)]->flag &= ~1;
     m_accelPanes[static_cast<u32>(state)]->flag |= 1;
     m_accelState = state;
 }
-
 void CtrlRaceInputViewer::setTrigger(Trigger trigger, TriggerState state) {
-    if(state == m_triggerStates[static_cast<u32>(trigger)]) {
+    u32 t = static_cast<u32>(trigger);
+    if (state == m_triggerStates[t]) {
         return;
     }
-    
-    m_triggerPanes[static_cast<u32>(trigger)][static_cast<u32>(m_triggerStates[static_cast<u32>(trigger)])]->flag &= ~1;
-    m_triggerPanes[static_cast<u32>(trigger)][static_cast<u32>(state)]->flag |= 1;
-    m_triggerStates[static_cast<u32>(trigger)] = state;
+    m_triggerPanes[t][static_cast<u32>(m_triggerStates[t])]->flag &= ~1;
+    m_triggerPanes[t][static_cast<u32>(state)]->flag |= 1;
+    m_triggerStates[t] = state;
 }
-
-void CtrlRaceInputViewer::setStick(const Vec2& state) {
-    const float scale = 10.0f;
-    m_stickPane->trans.x = m_stickOrigin.x + scale * state.x * m_stickPane->scale.x * m_stickPane->size.x;
-    m_stickPane->trans.y = m_stickOrigin.y + scale * state.z * m_stickPane->scale.z * m_stickPane->size.z;
+void CtrlRaceInputViewer::setStick(Vec2 state) {
+    if (state.x == m_stickState.x && state.z == m_stickState.z) {
+        return;
+    }
+    // Map range [-1, 1] -> [-width * 5 / 19, width * 5 / 19]
+    f32 scale = 5.0f / 19.0f;
+    m_stickPane->trans.x =
+            m_stickOrigin.x + scale * state.x * m_stickPane->scale.x * m_stickPane->size.x;
+    m_stickPane->trans.y =
+            m_stickOrigin.y + scale * state.z * m_stickPane->scale.z * m_stickPane->size.z;
     m_stickState = state;
 }
 
-}  // namespace UI
-}  // namespace Pulsar
+}//namespace UI
+}//namespace Pulsar
