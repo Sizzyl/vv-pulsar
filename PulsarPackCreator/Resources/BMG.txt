@@ -173,12 +173,10 @@
   3300	= Default music behaviour.
   3301	= Disables all music.
   3302	= Disables only race BRSTMs.
-  3330  = Forced
-  3331  = Nunchuk
-  3332  = Disabled
-  3400  = The input viewer will be shown for all controller types.
-  3401  = The input viewer will be shown when playing with a nunchuk controller.
-  3402  = The input viewer will be disabled.
+  3330  = Enabled
+  3331  = Disabled
+  3400  = The input viewer will be shown for all controller types (auto-detects nunchuk layout).
+  3401  = The input viewer will be disabled.
   3700	= Boot To Wiimmfi
   3710	= Disabled
   3711	= License 1
