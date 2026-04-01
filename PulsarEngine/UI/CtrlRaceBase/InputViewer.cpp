@@ -177,9 +177,10 @@ void CtrlRaceInputViewer::Load(const char* variant, u8 id) {
 
     if (controllerType == WHEEL || controllerType == CLASSIC || controllerType == GCN) {
         loader.Load(UI::raceFolder, "PULInputViewer", variant, groups);
+        return;
     }
 
-        loader.Load(UI::raceFolder, "PULInputViewer", variant, groups);
+    loader.Load(UI::raceFolder, "PULInputViewer", variant, groups);
 }
 void CtrlRaceInputViewer::setDpad(DpadState state) {
     if (state == m_dpadState) {
@@ -211,12 +212,12 @@ void CtrlRaceInputViewer::setTrigger(Trigger trigger, TriggerState state) {
     m_triggerPanes[t][static_cast<u32>(state)]->flag |= 1;
     m_triggerStates[t] = state;
 }
-void CtrlRaceInputViewer::setStick(Vec2 state) {
+void CtrlRaceInputViewer::setStick(const Vec2& state) {
     if (state.x == m_stickState.x && state.z == m_stickState.z) {
         return;
     }
     // Map range [-1, 1] -> [-width * 5 / 19, width * 5 / 19]
-    f32 scale = 5.0f / 19.0f;
+    float scale = 5.0f / 19.0f;
     m_stickPane->trans.x =
             m_stickOrigin.x + scale * state.x * m_stickPane->scale.x * m_stickPane->size.x;
     m_stickPane->trans.y =
