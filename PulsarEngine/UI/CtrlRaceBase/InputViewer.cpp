@@ -46,16 +46,18 @@ void CtrlRaceInputViewer::Init() {
 
         snprintf(name, 32, "Accel%.*s", strlen(stateName), stateName);
         nw4r::lyt::Pane* pane = this->layout.GetPaneByName(name);
+        nw4r::lyt::Pane* chuk_b = this->layout.GetPaneByName("TriggerRPressed");
+        nw4r::lyt::Pane* chuk_boff = this->layout.GetPaneByName("TriggerROff");
         this->SetPaneVisibility(name, state == AccelState_Off);
 
-        if (controllerType == NUNCHUCK) {
-            pane->trans.y -= pane->scale.z * 10.0f;
-            chuk_b->trans.y -= chuk_b->scale.z * 6.0f;
-            chuk_boff->trans.y -= chuk_boff->scale.z * 6.0f;
-        } else {
-            pane->trans.x += pane->scale.x * 15.0f;
-            pane->trans.y += pane->scale.z * 15.0f;
-        }
+        if (controllerType == NUNCHUCK)) {
+                pane->trans.y -= pane->scale.z * 10.0f;
+                chuk_b->trans.y -= chuk_b->scale.z * 6.0f;
+                chuk_boff->trans.y -= chuk_boff->scale.z * 6.0f;
+            } else {
+                pane->trans.x += pane->scale.x * 15.0f;
+                pane->trans.y += pane->scale.z * 15.0f;
+            }
         this->m_accelPanes[i] = pane;
 
         this->HudSlotColorEnable(name, true);
