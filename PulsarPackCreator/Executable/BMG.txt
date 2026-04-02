@@ -1,6 +1,5 @@
 #BMG
 
-   3f7  = Wiimmfi (1P)
    58a  = {CC}cc
    7dd	= Wiimmfi
    7de	= Riivolution Channel
@@ -176,7 +175,13 @@
   3801	= The game will boot directly to Wiimmfi on Licence 1.
   3802	= The game will boot directly to Wiimmfi on Licence 2.
   3803	= The game will boot directly to Wiimmfi on Licence 3.
-  3810	= Disabled
+  3804	= The game will boot directly to Wiimmfi on Licence 4.
+  4000	= Mii Heads
+  4001	= Music SpeedUp
+  4002	= Battle Glitch
+  4003	= Draggable Blues
+  4004	= Speedometer Location
+  4010  = Disabled
   4011	= Enabled
   4020	= Disabled
   4021	= Enabled
@@ -208,6 +213,9 @@
   4601  = The input viewer will show regular controller layout.
   4602  = The input viewer will show nunchuk controller layout.
   4700  = Speedometer Fractional
+  4710  = None
+  4711  = 1 digit
+  4712  = 2 digits
   4713  = 3 digits
   4800  = The speedometer will not have a fractional part.
   4801  = The speedometer will have a one digit fractional part.  
