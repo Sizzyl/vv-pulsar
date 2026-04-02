@@ -16,15 +16,13 @@
    ced	= ■ Drift ■\n
     + Drift lets you take corners without\n
     + losing speed. There are two drift modes.\n
-    + \n
     + ■ Hybrid Drift ■\n
     + You will drift automatically when turning,\n
     + you can manual drift to get a shorter Mini-Turbo.\n
-    + \n
+    + Reccomended for beginners -Sizzyl.
     + ■ Manual Drift ■\n
     + \z{802,170000}Hop while turning to drift. Keep\n
-    + drifting to get a Mini-Turbo, which\n
-    + gives you a burst of speed.
+    + drifting for Mini-Turbo, gives speed boost.
    cee	= View an explanation of drift and drift modes.
    bbf  = {CC}cc\n\z{800,32}Bikes Only
    bc3  = {CC}cc\n\z{800,32}Karts and Bikes
