@@ -13,14 +13,7 @@
    841	= \z{602,0} and \z{802,120000}\nwill connect to Wiimmfi\ntogether. Is this OK?
    cea	= Hybrid
    ceb	= Manual
-   ced	= \n
-    + ■ Hybrid Drift ■\n
-    + You will drift automatically when turning,\n
-    + you can manual drift to get a small Mini-Turbo.\n
-    + Reccomended for beginners -Sizzyl.
-    + ■ Manual Drift ■\n
-    + Hop while turning to drift. Keep\n
-    + drifting for Mini-Turbo, gives speed boost.
+   ced	= ■ Hybrid Drift ■\nYou will drift automatically when turning,\nbut you get \z{802,170000}less Mini-Turbo boost.\nReccomended for beginners - Sizzyl\n■ Manual Drift ■\n\z{802,170000}Hop while turning to drift. Keep\ndrifting to get a Mini-Turbo, which\ngives you a burst of speed. 
    cee	= View an explanation of drift and drift modes.
    bbf  = {CC}cc\n\z{800,32}Bikes Only
    bc3  = {CC}cc\n\z{800,32}Karts and Bikes
