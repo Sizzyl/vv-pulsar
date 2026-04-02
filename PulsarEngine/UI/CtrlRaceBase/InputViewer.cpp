@@ -169,11 +169,7 @@ void CtrlRaceInputViewer::Load(const char* variant, u8 id) {
         } else {
             loader.Load(UI::raceFolder, "PULInputViewer", variant, groups);
         }
-        return;
     }
-
-    // Fallback (should not reach here if disabled)
-    loader.Load(UI::raceFolder, "PULInputViewer", variant, groups);
 }
 void CtrlRaceInputViewer::setDpad(DpadState state) {
     if (state == m_dpadState) {
