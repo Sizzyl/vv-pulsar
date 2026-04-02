@@ -19,7 +19,7 @@ namespace UI {
 const s8 CtrlRaceInputViewer::DPAD_HOLD_FOR_N_FRAMES = 10;
 void CtrlRaceInputViewer::Init() {
     char name[32];
-    bool isBrakedriftToggled = true;  // Always show brake input with hybrid drift
+    bool isBrakedriftToggled = false;  // Always show brake input with hybrid drift
     RacedataScenario& raceScenario = Racedata::sInstance->racesScenario;
     
     for (int i = 0; i < (int)DpadState_Count; ++i) {
@@ -39,7 +39,6 @@ void CtrlRaceInputViewer::Init() {
     const ControllerType controllerType = SectionMgr::sInstance->pad.padInfos[0].controllerHolder->curController->GetType();
     const int inputSetting = Settings::Mgr::Get().GetSettingValue(Settings::SETTINGSTYPE_MENU, SETTINGMENU_RADIO_INPUT);
     const bool isGhostRace = (sectionId >= SECTION_WATCH_GHOST_FROM_CHANNEL && sectionId <= SECTION_WATCH_GHOST_FROM_MENU);
-    bool isNunchuck = (controllerType == NUNCHUCK);
 
     for (int i = 0; i < (int)AccelState_Count; ++i) {
         AccelState state = static_cast<AccelState>(i);
@@ -49,7 +48,7 @@ void CtrlRaceInputViewer::Init() {
         nw4r::lyt::Pane* pane = this->layout.GetPaneByName(name);
         this->SetPaneVisibility(name, state == AccelState_Off);
 
-        if (isBrakedriftToggled && !isNunchuck) {
+        if (isBrakedriftToggled && controllerType != NUNCHUCK) {
             pane->trans.x += pane->scale.x * 15.0f;
             pane->trans.y += pane->scale.z * 15.0f;
         }
