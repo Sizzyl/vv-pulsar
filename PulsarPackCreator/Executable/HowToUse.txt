@@ -1,0 +1,10 @@
+in /output/ folder you can find an example output,
+/Executable/output/VVault/Ghosts/f14e0833/1m53s133.rkg is a file not needed, but makes a folder on github that IS needed to show that that folder was made/would be made to use ghosts
+to run and make distribution from what you have here, 
+1. launch pack creator.exe
+2. load the config.pul from output file
+3. edit BMG and copy-paste BMG.txt over whats there and save
+4. edit whatever else you need to edit (adding new track/ghost names as needed)
+5. hit build -> build full pack
+6. paste in the files from "VVault" into your mod's folder (this mod's folder is named VVault so it makes it easier for me to do, you should rename the "VVault" folder not in the /output/ folder to whatever the name of the folder for your mod is to make stuff easy) and hit 'replace' whenever it says 'this file already exists'
+7. Put stuff that's now updated everything (BMG update, VVault folder overwrites pasted in) in dolphin's user folder -> Load -> Riivolution and then load it as a riivolution mod
