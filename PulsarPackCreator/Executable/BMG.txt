@@ -60,10 +60,10 @@
   2704  = Random Track
   2705	= \z{a02,1000000000}%
   2706  = \z{a02,1000000000}
-  2800	= 150\nCC
-  2801	= {CC}\nCC
-  2802	= 150\nFeather
-  2803	= {CC}\nFeather
+  2800	= 150cc\nTT
+  2801	= {CC}cc\nTT
+  2802	= 150cc\nFeather TT
+  2803	= {CC}cc\nFeather TT
   2810	= 150cc
   2811	= {CC}cc
   2812	= 150cc Feather
