@@ -10,6 +10,13 @@ To compile code you need to install CodeWarrior:
     and the DLL and EXE files inside `PowerPC_EABI_Tools/Command_Line_Tools`.
   - Useful documentation is in `Help/Power_Arch_Build_Tools_Reference.chm`
     (or `Help/PDF/Power Architecture Build Tools Reference.pdf`)
+
+# Additions to Pulsar
+Added in
+- Input Display
+- Hybrid Drift
+- Pause Anytime
+To access these things, go into the ["PulsarPackCreator/Executable/"](https://github.com/Sizzyl/vv-pulsar/tree/main/PulsarPackCreator/Executable) folder, and find the ["VVault"](https://github.com/Sizzyl/vv-pulsar/tree/main/PulsarPackCreator/Executable/VVault) folder. This contains overrides you need to apply to whatever your pack's folder is after it's built with the new features. You also need to hit 'edit BMG' in PulsarPackCreator.exe when you run it and paste in [the BMG.txt from the executable folder](https://github.com/Sizzyl/vv-pulsar/blob/main/PulsarPackCreator/Executable/BMG.txt). This updates the UI to show Hybrid drift and adds some additional small changes like adding "TT" to the timetrial menus.
     
 # MKW-SP
 Ported [**mkw-sp**](https://github.com/mkw-sp/mkw-sp) Input Display into this launcher with help from [**Retro Rewind Team**](https://github.com/Retro-Rewind-Team/rr-pulsar).
