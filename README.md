@@ -17,6 +17,8 @@ Added in
 - Hybrid Drift
 - Pause Anytime
 To access these things, go into the ["PulsarPackCreator/Executable/"](https://github.com/Sizzyl/vv-pulsar/tree/main/PulsarPackCreator/Executable) folder, and find the ["VVault"](https://github.com/Sizzyl/vv-pulsar/tree/main/PulsarPackCreator/Executable/VVault) folder. This contains overrides you need to apply to whatever your pack's folder is after it's built with the new features. You also need to hit 'edit BMG' in PulsarPackCreator.exe when you run it and paste in [the BMG.txt from the executable folder](https://github.com/Sizzyl/vv-pulsar/blob/main/PulsarPackCreator/Executable/BMG.txt). This updates the UI to show Hybrid drift and adds some additional small changes like adding "TT" to the timetrial menus.
+
+For those making a pack for the first time, a sample pack to import is included in the [output folder](https://github.com/Sizzyl/vv-pulsar/tree/main/PulsarPackCreator/Executable/output) of the executable folder and you can import ["Config.pul"](https://github.com/Sizzyl/vv-pulsar/blob/main/PulsarPackCreator/Executable/output/VVault/Binaries/Config.pul) from the binaries there to see how you need to label your tracks and whatnot. Pulsar Pack Creator itself works exactly the same as the original outside of having to overwrite files with the overwrites from above after you're doing creating/updating your pack.
     
 # MKW-SP
 Ported [**mkw-sp**](https://github.com/mkw-sp/mkw-sp) Input Display into this launcher with help from [**Retro Rewind Team**](https://github.com/Retro-Rewind-Team/rr-pulsar).
