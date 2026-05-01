@@ -120,6 +120,9 @@ kmWrite32(0x807f18c8, 0x38000000); //TC alert
 kmWrite16(0x80572690, 0x4800);
 kmWrite16(0x80569F68, 0x4800);
 
+//Allow Pausing Before Race Starts (Sponge)
+kmWrite32(0x80856a28, 0x48000050);
+
 //CtrlItemWindow
 kmWrite24(0x808A9C16, 'PUL'); //item_window_new -> item_window_PUL
 
